@@ -6,14 +6,14 @@ import json
 def add_book():
     """function to add a book to json list"""
     top = Toplevel()
-    top.config(padx=5, pady=5, title="Add a book")
+    top.config(padx=5, pady=5)
     top.grab_set()
 
-    b_name = Label(text="Book title")
-    a_name = Label(text="Author's name")
-    book = Entry(width=20)
-    author = Entry(width=20)
-    add = Button(text="Add a book")
+    b_name = Label(top, text="Book title")
+    a_name = Label(top, text="Author's name")
+    book = Entry(top, width=20)
+    author = Entry(top, width=20)
+    add = Button(top, text="Add a book")
 
     b_name.grid(column=1, row=1)
     book.grid(column=2, row=1, padx=5)
