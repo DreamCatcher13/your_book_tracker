@@ -5,10 +5,17 @@ import json
 
 ###  GLOBAL VARs  ###
 LIST = ""
+DIR = ""
 
 ### notes  ###
 # messagebox on success \ failure
 # top.destroy()
+
+def save():
+    """function to select the directory in which you want to save a new list"""
+    global DIR
+    messagebox.showinfo(title="Select a directory", message="Select a directory, where you want to save a new list")
+    DIR = filedialog.askdirectory()
 
 def select():
     """function to select a list with books"""
@@ -20,33 +27,51 @@ def select():
 
 def add_book():
     """function to add a book to json list"""
+    global LIST, DIR
     top = Toplevel()
     top.config(padx=5, pady=5)
     top.grab_set()
 
     b_name = Label(top, text="Book title")
     a_name = Label(top, text="Author's name")
+    l_name = Label(top, text="New list's name")
     book = Entry(top, width=20)
     author = Entry(top, width=20)
+    new_list = Entry(top, width=20)
     
     b_name.grid(column=1, row=1)
     book.grid(column=2, row=1, padx=5)
     a_name.grid(column=1, row=2, pady=5)
     author.grid(column=2, row=2, padx=5, pady=5)
+    l_name.grid(column=1, row=3, pady=5)
+    new_list.grid(column=2, row=3, padx=5, pady=5)
 
     def create_list():
         """function to create new json list"""
-        pass
+        save()
+        l = new_list.get()
+        athr = author.get()
+        bk = [book.get()]
+        if athr and l and bk:
+            data = {
+                athr: bk
+            }
+            jfile = DIR + f"/{l}.json"
+            with open(jfile, "w") as f:
+                json.dump(data, f, indent=4)
+            messagebox.showinfo(title="Success", message="New list was created")
+        else:
+            messagebox.showerror(title="Error", message="You must fill all the fields")
+
 
     def add_to_list():
         """function to add a book to existing json list"""
         select()
-        list.insert(1.0, LIST)
 
     new = Button(top, text="Create new list", width=15, command=create_list)
     add = Button(top, text="Add to existing list", width=15, command=add_to_list)
-    new.grid(column=1, row=3, pady=5)
-    add.grid(column=2, row=3, pady=5)
+    new.grid(column=1, row=4, pady=5)
+    add.grid(column=2, row=4, pady=5)
 
 def random_book():
     """function to pick a random book from the list"""
