@@ -95,16 +95,27 @@ def add_book():
 
 def random_book():
     """function to pick a random book from the list"""
+    global LIST, DIR, JFILE
     select()
+    print(list(JFILE.values()))
+    #list.insert(1.0, bk)
 
 def authors():
     """function to display all authors from the list"""
+    global LIST, DIR, JFILE
     select()
-
+    display = [ f"\t-- {str(i)}" for i in JFILE.keys() ]
+    list_box.insert(1.0, f"All authors from {LIST}:\n")
+    list_box.insert(2.0, "\n".join(display))
 
 def books():
     """function to display all books from a list"""
+    global LIST, DIR, JFILE
     select()
+    # you get Author and a LIST [] of books, so you need to do smth
+    display = [ f"\t-- {k, v}" for k, v in JFILE.items() ]
+    list_box.insert(1.0, f"All books from {LIST}:\n")
+    list_box.insert(2.0, "\n".join(display))
 
 ###  MAIN GUI window  ###
 
@@ -119,15 +130,15 @@ b_list = Button(text="List all books", width=20, command=books)
 b_rand = Button(text="Random book", width=20, command=random_book)
 scroll = Scrollbar(orient="vertical")
 scroll.grid(row=3, column=5, sticky="ns")
-list = Text(height=20, width=80, yscrollcommand=scroll.set)
-scroll.config(command=list.yview)
+list_box = Text(height=20, width=80, yscrollcommand=scroll.set)
+scroll.config(command=list_box.yview)
 
 title.grid(column=2, row=1, columnspan=2, pady=(0, 5))
 book_add.grid(column=1, row=2)
 a_list.grid(column=2, row=2, padx=5)
 b_list.grid(column=3, row=2, padx=5)
 b_rand.grid(column=4, row=2, padx=5)
-list.grid(column=1, row=3, columnspan=4, pady=(10, 10))
+list_box.grid(column=1, row=3, columnspan=4, pady=(10, 10))
 
 window.mainloop()
 
