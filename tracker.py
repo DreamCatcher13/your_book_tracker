@@ -10,6 +10,7 @@ DIR = ""
 ### notes  ###
 # messagebox on success \ failure
 # top.destroy()
+# currently only single book , but maybe later books separated by ',' 
 
 def save():
     """function to select the directory in which you want to save a new list"""
@@ -51,10 +52,10 @@ def add_book():
         save()
         l = new_list.get()
         athr = author.get()
-        bk = [book.get()]
+        bk = book.get()
         if athr and l and bk:
             data = {
-                athr: bk
+                athr: [bk]
             }
             jfile = DIR + f"/{l}.json"
             with open(jfile, "w") as f:
@@ -67,6 +68,25 @@ def add_book():
     def add_to_list():
         """function to add a book to existing json list"""
         select()
+        with open(LIST, "r") as f:
+            jfile = json.load(f)
+        athr = author.get()
+        bk = book.get() 
+        if athr and bk:
+            if athr in jfile.keys():
+                jfile[athr].append(bk)
+                with open(LIST, "w") as f:
+                    json.dump(jfile, f, indent=4)
+            else:
+                new_author = {
+                    athr: [bk]
+                }
+                jfile.update(new_author)
+                with open(LIST, "w") as f:
+                    json.dump(jfile, f, indent=4)
+            messagebox.showinfo(title="Success", message="Book list was updated")
+        else:
+            messagebox.showerror(title="Error", message="Author and Book title field should NOT be empty")
 
     new = Button(top, text="Create new list", width=15, command=create_list)
     add = Button(top, text="Add to existing list", width=15, command=add_to_list)
