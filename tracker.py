@@ -6,6 +6,7 @@ import json
 ###  GLOBAL VARs  ###
 LIST = ""
 DIR = ""
+JFILE = ""
 
 ### notes  ###
 # messagebox on success \ failure
@@ -20,15 +21,17 @@ def save():
 
 def select():
     """function to select a list with books"""
-    global LIST
+    global LIST, JFILE
     messagebox.showinfo(title="Select file", message="Select *.json file with your books")
     filetypes = (('json files', '*.json'), ('All files', '*.*'))
     book_list_file = filedialog.askopenfilename(title='Select your list', filetypes=filetypes)
-    LIST = book_list_file  
+    LIST = book_list_file
+    with open(LIST, "r") as f:
+        JFILE = json.load(f)  
 
 def add_book():
     """function to add a book to json list"""
-    global LIST, DIR
+    global LIST, DIR, JFILE
     top = Toplevel()
     top.config(padx=5, pady=5)
     top.grab_set()
@@ -64,26 +67,23 @@ def add_book():
         else:
             messagebox.showerror(title="Error", message="You must fill all the fields")
 
-
     def add_to_list():
         """function to add a book to existing json list"""
         select()
-        with open(LIST, "r") as f:
-            jfile = json.load(f)
         athr = author.get()
         bk = book.get() 
         if athr and bk:
-            if athr in jfile.keys():
-                jfile[athr].append(bk)
+            if athr in JFILE.keys():
+                JFILE[athr].append(bk)
                 with open(LIST, "w") as f:
-                    json.dump(jfile, f, indent=4)
+                    json.dump(JFILE, f, indent=4)
             else:
                 new_author = {
                     athr: [bk]
                 }
-                jfile.update(new_author)
+                JFILE.update(new_author)
                 with open(LIST, "w") as f:
-                    json.dump(jfile, f, indent=4)
+                    json.dump(JFILE, f, indent=4)
             messagebox.showinfo(title="Success", message="Book list was updated")
         else:
             messagebox.showerror(title="Error", message="Author and Book title field should NOT be empty")
@@ -100,6 +100,7 @@ def random_book():
 def authors():
     """function to display all authors from the list"""
     select()
+
 
 def books():
     """function to display all books from a list"""
