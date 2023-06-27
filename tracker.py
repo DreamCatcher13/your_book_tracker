@@ -108,6 +108,7 @@ def authors():
     """function to display all authors from the list"""
     global LIST, DIR, JFILE
     select()
+    list_box.delete(1.0, END)
     display = [ f"\t-- {str(i)}" for i in JFILE.keys() ]
     list_box.insert(1.0, f"All authors from {LIST.split('/')[-1]}:\n")
     list_box.insert(2.0, "\n".join(display))
