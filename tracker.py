@@ -97,8 +97,14 @@ def random_book():
     """function to pick a random book from the list"""
     global LIST, DIR, JFILE
     select()
-    print(list(JFILE.values()))
-    #list.insert(1.0, bk)
+    all_books = []
+    list_box.delete(1.0, END)
+    for k in JFILE.keys():
+        all_books += JFILE[k]
+    r_bk = random.choice(all_books)
+    athr = [k for k, v in JFILE.items() if r_bk in JFILE[k]] # I am really pround of this line 
+    display = f"Book to read:\n\t-- {r_bk} by {athr[0]}"
+    list_box.insert(1.0, display)
 
 def authors():
     """function to display all authors from the list"""
