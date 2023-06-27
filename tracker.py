@@ -118,8 +118,13 @@ def books():
     """function to display all books from a list"""
     global LIST, DIR, JFILE
     select()
-    # you get Author and a LIST [] of books, so you need to do smth
-    display = [ f"\t-- {k, v}" for k, v in JFILE.items() ]
+    display = []
+    for k, v in JFILE.items():
+        athr = f"\t*{k}:\n"
+        bks = [f"\t\t--{i}" for i in v]
+        result = athr + "\n".join(bks)
+        display.append(result)
+    #display = "\n".join(display)
     list_box.insert(1.0, f"All books from {LIST}:\n")
     list_box.insert(2.0, "\n".join(display))
 
@@ -148,3 +153,5 @@ list_box.grid(column=1, row=3, columnspan=4, pady=(10, 10))
 
 window.mainloop()
 
+#газ 06358
+#ел 015126
