@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import messagebox, filedialog
-import string, random
+import random
 import json
 
 ###  GLOBAL VARs  ###
@@ -9,8 +9,6 @@ DIR = ""
 JFILE = ""
 
 ### notes  ###
-# messagebox on success \ failure
-# top.destroy()
 # currently only single book , but maybe later books separated by ',' 
 
 def save():
@@ -111,7 +109,7 @@ def authors():
     global LIST, DIR, JFILE
     select()
     display = [ f"\t-- {str(i)}" for i in JFILE.keys() ]
-    list_box.insert(1.0, f"All authors from {LIST}:\n")
+    list_box.insert(1.0, f"All authors from {LIST.split('/')[-1]}:\n")
     list_box.insert(2.0, "\n".join(display))
 
 def books():
@@ -119,13 +117,13 @@ def books():
     global LIST, DIR, JFILE
     select()
     display = []
+    list_box.delete(1.0, END)
     for k, v in JFILE.items():
-        athr = f"\t*{k}:\n"
-        bks = [f"\t\t--{i}" for i in v]
+        athr = f"\t* {k}:\n"
+        bks = [f"\t\t-- {i}" for i in v]
         result = athr + "\n".join(bks)
         display.append(result)
-    #display = "\n".join(display)
-    list_box.insert(1.0, f"All books from {LIST}:\n")
+    list_box.insert(1.0, f"All books from {LIST.split('/')[-1]}:\n")
     list_box.insert(2.0, "\n".join(display))
 
 ###  MAIN GUI window  ###
