@@ -151,6 +151,3 @@ b_rand.grid(column=4, row=2, padx=5)
 list_box.grid(column=1, row=3, columnspan=4, pady=(10, 10))
 
 window.mainloop()
-
-#газ 06358
-#ел 015126
