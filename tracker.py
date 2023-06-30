@@ -91,6 +91,10 @@ def add_book():
     new.grid(column=1, row=4, pady=5)
     add.grid(column=2, row=4, pady=5)
 
+def delete_book():
+    """fucntion to delete a book or an author from a list"""
+    pass
+
 def random_book():
     """function to pick a random book from the list"""
     global LIST, DIR, JFILE
@@ -138,16 +142,18 @@ book_add = Button(text="Add a book", width=20, command=add_book)
 a_list = Button(text="List all authors", width=20, command=authors)
 b_list = Button(text="List all books", width=20, command=books)
 b_rand = Button(text="Random book", width=20, command=random_book)
+book_delete = Button(text="Delete a book", width=20, command=delete_book)
 scroll = Scrollbar(orient="vertical")
-scroll.grid(row=3, column=5, sticky="ns")
-list_box = Text(height=20, width=80, yscrollcommand=scroll.set)
+scroll.grid(row=3, column=4, sticky="ns")
+list_box = Text(height=20, width=60, yscrollcommand=scroll.set)
 scroll.config(command=list_box.yview)
 
-title.grid(column=2, row=1, columnspan=2, pady=(0, 5))
-book_add.grid(column=1, row=2)
-a_list.grid(column=2, row=2, padx=5)
-b_list.grid(column=3, row=2, padx=5)
-b_rand.grid(column=4, row=2, padx=5)
-list_box.grid(column=1, row=3, columnspan=4, pady=(10, 10))
+title.grid(column=1, row=1, columnspan=4, pady=(0, 5))
+book_add.grid(column=1, row=4)
+book_delete.grid(column=3, row=4)
+a_list.grid(column=1, row=2, padx=5)
+b_list.grid(column=2, row=2, padx=5)
+b_rand.grid(column=3, row=2, padx=5)
+list_box.grid(column=1, row=3, columnspan=3, pady=(10, 10))
 
 window.mainloop()
