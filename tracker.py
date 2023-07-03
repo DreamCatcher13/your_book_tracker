@@ -10,6 +10,9 @@ JFILE = ""
 
 ### notes  ###
 # currently only single book , but maybe later books separated by ',' 
+# some standartization for saving books \ authors == spaces, capital letters
+# random books from all lists
+# start thinking about classess or refactoring 
 
 def save():
     """function to select the directory in which you want to save a new list"""
@@ -26,6 +29,17 @@ def select():
     LIST = book_list_file
     with open(LIST, "r") as f:
         JFILE = json.load(f)  
+
+def del_book(bk, athr):
+    """search and delete a book"""
+    books = JFILE[athr]
+    books.remove(bk)
+    if len(books) == 0:
+        JFILE.pop(athr)
+    else:
+        JFILE[athr] = books
+    with open(LIST, "w") as f:
+        json.dump(JFILE, f, indent=4)
 
 def add_book():
     """function to add a book to json list"""
@@ -93,7 +107,60 @@ def add_book():
 
 def delete_book():
     """fucntion to delete a book or an author from a list"""
-    pass
+    global LIST, DIR, JFILE
+    top = Toplevel()
+    top.config(padx=5, pady=5)
+    top.grab_set()
+
+    b_name = Label(top, text="Book title")
+    a_name = Label(top, text="Author's name")
+    book = Entry(top, width=20)
+    author = Entry(top, width=20)
+    
+    b_name.grid(column=1, row=1)
+    book.grid(column=2, row=1, padx=5)
+    a_name.grid(column=1, row=2, pady=5)
+    author.grid(column=2, row=2, padx=5, pady=5)
+
+    def delete_bk():
+        """function to delete a book"""
+        select()
+        athr = author.get()
+        bk = book.get()
+        if athr in JFILE.keys() and bk in JFILE[athr]:
+            del_book(bk=bk, athr=athr)
+            messagebox.showinfo(title="Success", message="Book was deleted from a list")
+        elif bk:
+            found = False
+            for k in JFILE.keys():
+               if bk in JFILE[k]:
+                found = True
+                del_book(bk=bk, athr=k)
+                messagebox.showinfo(title="Success", message="Book was deleted from a list")
+                break
+            if not found:
+                messagebox.showerror(title="Error", message="Book NOT found in the list")                                  
+        else:
+            messagebox.showerror(title="Error", message="You must enter a book title")
+
+    def delete_author():
+        """function to add a book to existing json list"""
+        select()
+        athr = author.get()
+        if athr in JFILE.keys():
+            JFILE.pop(athr)
+            with open(LIST, "w") as f:
+                json.dump(JFILE, f, indent=4)
+            messagebox.showinfo(title="Success", message="Author was deleted")
+        elif athr not in JFILE.keys():
+            messagebox.showerror(title="Error", message="No such author in the list")
+        else:
+            messagebox.showerror(title="Error", message="Author field should NOT be empty")
+
+    b_del = Button(top, text="Delete a book", width=15, command=delete_bk)
+    a_del = Button(top, text="Delete an author", width=15, command=delete_author)
+    b_del.grid(column=1, row=3, pady=5)
+    a_del.grid(column=2, row=3, pady=5)
 
 def random_book():
     """function to pick a random book from the list"""
