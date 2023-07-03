@@ -144,7 +144,7 @@ def delete_book():
             messagebox.showerror(title="Error", message="You must enter a book title")
 
     def delete_author():
-        """function to add a book to existing json list"""
+        """function to delete an author from a list"""
         select()
         athr = author.get()
         if athr in JFILE.keys():
