@@ -170,14 +170,20 @@ def delete_book():
 
 def random_book():
     """function to pick a random book from the list"""
-    global LIST, DIR, JFILE
-    select()
+    messagebox.showinfo(title="Info", message="Select one list or a few")
+    filetypes = (('json files', '*.json'), ('All files', '*.*'))
+    filez = filedialog.askopenfilenames(title="Select your list", filetypes=filetypes)
+    list_content = {}
     all_books = []
+    for f in filez:
+        with open(f, "r") as lst:
+            content = json.load(lst)
+            list_content = list_content | content
     list_box.delete(1.0, END)
-    for k in JFILE.keys():
-        all_books += JFILE[k]
+    for k in list_content.keys():
+        all_books += list_content[k]
     r_bk = random.choice(all_books)
-    athr = [k for k in JFILE.keys() if r_bk in JFILE[k]] # I am really pround of this line 
+    athr = [k for k in list_content.keys() if r_bk in list_content[k]] # I am really pround of this line 
     display = f"Book to read:\n\t-- {r_bk} by {athr[0]}"
     list_box.insert(1.0, display)
 
