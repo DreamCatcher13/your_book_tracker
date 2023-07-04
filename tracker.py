@@ -10,7 +10,7 @@ JFILE = ""
 
 ### notes  ###
 # currently only single book , but maybe later books separated by ',' 
-# some standartization for saving books \ authors == spaces, capital letters
+# path / different in linux, find a new way to split 
 # random books from all lists
 # start thinking about classess or refactoring 
 
@@ -41,6 +41,12 @@ def del_book(bk, athr):
     with open(LIST, "w") as f:
         json.dump(JFILE, f, indent=4)
 
+def standard(str):
+    """function to standardize author \ book"""
+    str = str.title().strip()
+    str = " ".join(str.split())
+    return str
+
 def add_book():
     """function to add a book to json list"""
     global LIST, DIR, JFILE
@@ -65,9 +71,9 @@ def add_book():
     def create_list():
         """function to create new json list"""
         save()
-        l = new_list.get()
-        athr = author.get()
-        bk = book.get()
+        l = "_".join(new_list.get().split())
+        athr = standard(author.get())
+        bk = standard(book.get())
         if athr and l and bk:
             data = {
                 athr: [bk]
@@ -82,8 +88,8 @@ def add_book():
     def add_to_list():
         """function to add a book to existing json list"""
         select()
-        athr = author.get()
-        bk = book.get() 
+        athr = standard(author.get())
+        bk = standard(book.get()) 
         if athr and bk:
             if athr in JFILE.keys():
                 JFILE[athr].append(bk)
@@ -125,8 +131,8 @@ def delete_book():
     def delete_bk():
         """function to delete a book"""
         select()
-        athr = author.get()
-        bk = book.get()
+        athr = standard(author.get())
+        bk = standard(book.get())
         if athr in JFILE.keys() and bk in JFILE[athr]:
             del_book(bk=bk, athr=athr)
             messagebox.showinfo(title="Success", message="Book was deleted from a list")
@@ -146,7 +152,7 @@ def delete_book():
     def delete_author():
         """function to delete an author from a list"""
         select()
-        athr = author.get()
+        athr = standard(author.get())
         if athr in JFILE.keys():
             JFILE.pop(athr)
             with open(LIST, "w") as f:
@@ -171,7 +177,7 @@ def random_book():
     for k in JFILE.keys():
         all_books += JFILE[k]
     r_bk = random.choice(all_books)
-    athr = [k for k, v in JFILE.items() if r_bk in JFILE[k]] # I am really pround of this line 
+    athr = [k for k in JFILE.keys() if r_bk in JFILE[k]] # I am really pround of this line 
     display = f"Book to read:\n\t-- {r_bk} by {athr[0]}"
     list_box.insert(1.0, display)
 
