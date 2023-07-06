@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import messagebox, filedialog
-import random
-import json
+import random, os, json
 
 ###  GLOBAL VARs  ###
 LIST = ""
@@ -10,8 +9,7 @@ JFILE = ""
 
 ### notes  ###
 # currently only single book , but maybe later books separated by ',' 
-# path / different in linux, find a new way to split 
-# random books from all lists
+# display from one or a few lists 
 # start thinking about classess or refactoring 
 
 def save():
@@ -43,8 +41,7 @@ def del_book(bk, athr):
 
 def standard(str):
     """function to standardize author \ book"""
-    str = str.title().strip()
-    str = " ".join(str.split())
+    str = " ".join(word[0].upper() + word[1:] for word in str.split()) # thanks stackoverflow
     return str
 
 def add_book():
@@ -78,7 +75,7 @@ def add_book():
             data = {
                 athr: [bk]
             }
-            jfile = DIR + f"/{l}.json"
+            jfile = os.path.join(DIR, f"{l}.json")
             with open(jfile, "w") as f:
                 json.dump(data, f, indent=4)
             messagebox.showinfo(title="Success", message="New list was created")
@@ -169,7 +166,7 @@ def delete_book():
     a_del.grid(column=2, row=3, pady=5)
 
 def random_book():
-    """function to pick a random book from the list"""
+    """function to pick a random book from the lists"""
     messagebox.showinfo(title="Info", message="Select one list or a few")
     filetypes = (('json files', '*.json'), ('All files', '*.*'))
     filez = filedialog.askopenfilenames(title="Select your list", filetypes=filetypes)
@@ -178,7 +175,7 @@ def random_book():
     for f in filez:
         with open(f, "r") as lst:
             content = json.load(lst)
-            list_content = list_content | content
+            list_content = list_content | content  #merging dictionaries
     list_box.delete(1.0, END)
     for k in list_content.keys():
         all_books += list_content[k]
@@ -193,7 +190,7 @@ def authors():
     select()
     list_box.delete(1.0, END)
     display = [ f"\t-- {str(i)}" for i in JFILE.keys() ]
-    list_box.insert(1.0, f"All authors from {LIST.split('/')[-1]}:\n")
+    list_box.insert(1.0, f"All authors from {os.path.basename(LIST)}:\n")
     list_box.insert(2.0, "\n".join(display))
 
 def books():
@@ -207,7 +204,7 @@ def books():
         bks = [f"\t\t-- {i}" for i in v]
         result = athr + "\n".join(bks)
         display.append(result)
-    list_box.insert(1.0, f"All books from {LIST.split('/')[-1]}:\n")
+    list_box.insert(1.0, f"All books from {os.path.basename(LIST)}:\n")
     list_box.insert(2.0, "\n".join(display))
 
 ###  MAIN GUI window  ###
