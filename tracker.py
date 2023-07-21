@@ -6,10 +6,10 @@ import random, os, json
 LIST = ""
 DIR = ""
 JFILE = ""
+LIST_TO_DISPLAY = ""
 
 ### notes  ###
 # currently only single book , but maybe later books separated by ',' 
-# display from one or a few lists 
 # start thinking about classess or refactoring 
 
 def save():
@@ -27,6 +27,21 @@ def select():
     LIST = book_list_file
     with open(LIST, "r") as f:
         JFILE = json.load(f)  
+
+def select_to_display():
+    """function to select a few lists with books"""
+    global LIST_TO_DISPLAY
+    messagebox.showinfo(title="Info", message="Select one list or a few")
+    filetypes = (('json files', '*.json'), ('All files', '*.*'))
+    filez = filedialog.askopenfilenames(title="Select your list", filetypes=filetypes)
+    list_content = {}
+    for f in filez:
+        with open(f, "r") as lst:
+            content = json.load(lst)
+            # BUG -- if the same keys (author) in different lists, it will show only values from the last list 
+            list_content = list_content | content  #merging dictionaries
+    LIST_TO_DISPLAY = list_content
+
 
 def del_book(bk, athr):
     """search and delete a book"""
@@ -166,45 +181,39 @@ def delete_book():
     a_del.grid(column=2, row=3, pady=5)
 
 def random_book():
-    """function to pick a random book from the lists"""
-    messagebox.showinfo(title="Info", message="Select one list or a few")
-    filetypes = (('json files', '*.json'), ('All files', '*.*'))
-    filez = filedialog.askopenfilenames(title="Select your list", filetypes=filetypes)
-    list_content = {}
+    """function to pick a random book from the list(s)"""
+    global LIST_TO_DISPLAY
+    select_to_display()
     all_books = []
-    for f in filez:
-        with open(f, "r") as lst:
-            content = json.load(lst)
-            list_content = list_content | content  #merging dictionaries
     list_box.delete(1.0, END)
-    for k in list_content.keys():
-        all_books += list_content[k]
+    for k in LIST_TO_DISPLAY.keys():
+        all_books += LIST_TO_DISPLAY[k]
     r_bk = random.choice(all_books)
-    athr = [k for k in list_content.keys() if r_bk in list_content[k]] # I am really pround of this line 
+    athr = [k for k in LIST_TO_DISPLAY.keys() if r_bk in LIST_TO_DISPLAY[k]] # I am really pround of this line 
     display = f"Book to read:\n\t-- {r_bk} by {athr[0]}"
     list_box.insert(1.0, display)
 
 def authors():
-    """function to display all authors from the list"""
-    global LIST, DIR, JFILE
-    select()
+    """function to display all authors from the list(s)"""
+    global LIST_TO_DISPLAY
+    select_to_display()
     list_box.delete(1.0, END)
-    display = [ f"\t-- {str(i)}" for i in JFILE.keys() ]
-    list_box.insert(1.0, f"All authors from {os.path.basename(LIST)}:\n")
+    display = [ f"\t-- {str(i)}" for i in LIST_TO_DISPLAY.keys() ]
+    list_box.insert(1.0, f"All authors from your list(s):\n")
     list_box.insert(2.0, "\n".join(display))
 
 def books():
-    """function to display all books from a list"""
-    global LIST, DIR, JFILE
-    select()
+    """function to display all books from the list(s)"""
+    global LIST_TO_DISPLAY
+    select_to_display()
     display = []
     list_box.delete(1.0, END)
-    for k, v in JFILE.items():
+    for k, v in LIST_TO_DISPLAY.items():
         athr = f"\t* {k}:\n"
         bks = [f"\t\t-- {i}" for i in v]
         result = athr + "\n".join(bks)
         display.append(result)
-    list_box.insert(1.0, f"All books from {os.path.basename(LIST)}:\n")
+    list_box.insert(1.0, f"All books from your list(s):\n")
     list_box.insert(2.0, "\n".join(display))
 
 ###  MAIN GUI window  ###
