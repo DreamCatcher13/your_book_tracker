@@ -9,7 +9,7 @@ JFILE = ""
 LIST_TO_DISPLAY = ""
 
 ### notes  ###
-# currently only single book , but maybe later books separated by ',' 
+# dropdown list for delete ?
 # start thinking about classess or refactoring 
 
 def save():
@@ -60,13 +60,13 @@ def standard(str):
     return str
 
 def add_book():
-    """function to add a book to json list"""
+    """function to add books to json list"""
     global LIST, DIR, JFILE
     top = Toplevel()
     top.config(padx=5, pady=5)
     top.grab_set()
 
-    b_name = Label(top, text="Book title")
+    b_name = Label(top, text="Book's title\nor a few, separated by ;")
     a_name = Label(top, text="Author's name")
     l_name = Label(top, text="New list's name")
     book = Entry(top, width=20)
@@ -85,10 +85,10 @@ def add_book():
         save()
         l = "_".join(new_list.get().split())
         athr = standard(author.get())
-        bk = standard(book.get())
+        bk = [standard(b) for b in book.get().split(sep=";")]
         if athr and l and bk:
             data = {
-                athr: [bk]
+                athr: bk
             }
             jfile = os.path.join(DIR, f"{l}.json")
             with open(jfile, "w") as f:
@@ -98,18 +98,19 @@ def add_book():
             messagebox.showerror(title="Error", message="You must fill all the fields")
 
     def add_to_list():
-        """function to add a book to existing json list"""
+        """function to add books to existing json list"""
         select()
         athr = standard(author.get())
-        bk = standard(book.get()) 
+        bk = [standard(b) for b in book.get().split(sep=";")]
         if athr and bk:
             if athr in JFILE.keys():
-                JFILE[athr].append(bk)
+                for b in bk:
+                    JFILE[athr].append(b)
                 with open(LIST, "w") as f:
                     json.dump(JFILE, f, indent=4)
             else:
                 new_author = {
-                    athr: [bk]
+                    athr: bk
                 }
                 JFILE.update(new_author)
                 with open(LIST, "w") as f:
@@ -130,7 +131,7 @@ def delete_book():
     top.config(padx=5, pady=5)
     top.grab_set()
 
-    b_name = Label(top, text="Book title")
+    b_name = Label(top, text="Book's title")
     a_name = Label(top, text="Author's name")
     book = Entry(top, width=20)
     author = Entry(top, width=20)
@@ -223,7 +224,7 @@ window.title("Book tracker")
 window.config(padx=15, pady=15)
 
 title = Label(text="List of all your planned \ unfinished books")
-book_add = Button(text="Add a book", width=20, command=add_book) 
+book_add = Button(text="Add books", width=20, command=add_book) 
 a_list = Button(text="List all authors", width=20, command=authors)
 b_list = Button(text="List all books", width=20, command=books)
 b_rand = Button(text="Random book", width=20, command=random_book)
