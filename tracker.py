@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import messagebox, filedialog
+from tkinter import messagebox, filedialog, ttk
 import random, os, json
 
 ###  GLOBAL VARs  ###
@@ -9,7 +9,7 @@ JFILE = ""
 LIST_TO_DISPLAY = ""
 
 ### notes  ###
-# dropdown list for delete ?
+# add book clear Entry
 # start thinking about classess or refactoring 
 
 def save():
@@ -125,16 +125,29 @@ def add_book():
     add.grid(column=2, row=4, pady=5)
 
 def delete_book():
-    """fucntion to delete a book or an author from a list"""
+    """function to delete a book or an author from a list"""
+    select()
     global LIST, DIR, JFILE
     top = Toplevel()
     top.config(padx=5, pady=5)
     top.grab_set()
 
+    def selection_changed(event):
+        a = author.get()
+        book['values'] = JFILE[a]
+
+    def reload_list():
+        book['values'] = []
+        author.set('')
+        with open(LIST, "r") as f:
+            JFILE = json.load(f)
+        author['values'] = [k for k in JFILE.keys()]
+
     b_name = Label(top, text="Book's title")
     a_name = Label(top, text="Author's name")
-    book = Entry(top, width=20)
-    author = Entry(top, width=20)
+    book = ttk.Combobox(top, state='readonly', width=20)
+    author = ttk.Combobox(top, state='readonly', width=20, values=[k for k in JFILE.keys()])
+    author.bind("<<ComboboxSelected>>", selection_changed)
     
     b_name.grid(column=1, row=1)
     book.grid(column=2, row=1, padx=5)
@@ -143,36 +156,24 @@ def delete_book():
 
     def delete_bk():
         """function to delete a book"""
-        select()
-        athr = standard(author.get())
-        bk = standard(book.get())
-        if athr in JFILE.keys() and bk in JFILE[athr]:
+        athr = author.get()
+        bk = book.get()
+        if athr and bk:
             del_book(bk=bk, athr=athr)
+            reload_list()
             messagebox.showinfo(title="Success", message="Book was deleted from a list")
-        elif bk:
-            found = False
-            for k in JFILE.keys():
-               if bk in JFILE[k]:
-                found = True
-                del_book(bk=bk, athr=k)
-                messagebox.showinfo(title="Success", message="Book was deleted from a list")
-                break
-            if not found:
-                messagebox.showerror(title="Error", message="Book NOT found in the list")                                  
         else:
-            messagebox.showerror(title="Error", message="You must enter a book title")
-
+            messagebox.showerror(title="Error", message="Author and book fields should NOT be empty")                           
+            
     def delete_author():
         """function to delete an author from a list"""
-        select()
-        athr = standard(author.get())
-        if athr in JFILE.keys():
+        athr = author.get()
+        if athr:
             JFILE.pop(athr)
             with open(LIST, "w") as f:
                 json.dump(JFILE, f, indent=4)
+                reload_list()
             messagebox.showinfo(title="Success", message="Author was deleted")
-        elif athr not in JFILE.keys():
-            messagebox.showerror(title="Error", message="No such author in the list")
         else:
             messagebox.showerror(title="Error", message="Author field should NOT be empty")
 
