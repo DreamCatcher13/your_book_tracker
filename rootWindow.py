@@ -1,18 +1,21 @@
 import tkinter as tk
 from tkinter import messagebox, filedialog, ttk
+from mainFrame import mainContainer
 import random, os, json
 
 class rootWindow(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         # Adding a title to the window
-        self.wm_title("Test Application")
+        self.wm_title("Book tracker")
+        self.config(padx=15, pady=15)
 
         # creating a frame and assigning it to container
-        container = tk.Frame(self, height=400, width=600)
-        # specifying the region where the frame is packed in root
-        container.pack(side="top", fill="both", expand=True)
+        mainCont = mainContainer(self, height=400, width=500)
+        sideContainer = tk.Frame(self, height=400, width=300)
+        mainCont.grid(column=0, row=0)
+        sideContainer.grid(column=1, row=0)
 
-        # configuring the location of the container using grid
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
+        
+
+

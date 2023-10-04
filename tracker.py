@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox, filedialog, ttk
 import random, os, json
+from rootWindow import rootWindow 
 
 ###  GLOBAL VARs  ###
 LIST = ""
@@ -219,7 +220,7 @@ def books():
     list_box.insert(2.0, "\n".join(display))
 
 ###  MAIN GUI window  ###
-
+""" 
 window = Tk()
 window.title("Book tracker")
 window.config(padx=15, pady=15)
@@ -243,4 +244,9 @@ b_list.grid(column=2, row=2, padx=5)
 b_rand.grid(column=3, row=2, padx=5)
 list_box.grid(column=1, row=3, columnspan=3, pady=(10, 10))
 
+window.mainloop()  
+
+"""
+
+window =  rootWindow()
 window.mainloop()
