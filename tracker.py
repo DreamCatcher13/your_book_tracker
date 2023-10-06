@@ -10,7 +10,7 @@ JFILE = ""
 LIST_TO_DISPLAY = ""
 
 ### notes  ###
-# add book clear Entry
+# smt weird with reload list()
 # start thinking about classess or refactoring 
 
 def save():
@@ -57,7 +57,7 @@ def del_book(bk, athr):
 
 def standard(str):
     """function to standardize author \ book"""
-    str = " ".join(word[0].upper() + word[1:] for word in str.split()) # thanks stackoverflow
+    str = " ".join(word[0].upper() + word[1:].lower() for word in str.split()) # thanks stackoverflow
     return str
 
 def add_book():
@@ -81,6 +81,10 @@ def add_book():
     l_name.grid(column=1, row=3, pady=5)
     new_list.grid(column=2, row=3, padx=5, pady=5)
 
+    def cleanEntries():
+        book.delete(0, END)
+        author.delete(0, END)
+
     def create_list():
         """function to create new json list"""
         save()
@@ -95,6 +99,8 @@ def add_book():
             with open(jfile, "w") as f:
                 json.dump(data, f, indent=4)
             messagebox.showinfo(title="Success", message="New list was created")
+            cleanEntries()
+            new_list.delete(0, END)
         else:
             messagebox.showerror(title="Error", message="You must fill all the fields")
 
@@ -117,6 +123,7 @@ def add_book():
                 with open(LIST, "w") as f:
                     json.dump(JFILE, f, indent=4)
             messagebox.showinfo(title="Success", message="Book list was updated")
+            cleanEntries()
         else:
             messagebox.showerror(title="Error", message="Author and Book title field should NOT be empty")
 
@@ -220,7 +227,7 @@ def books():
     list_box.insert(2.0, "\n".join(display))
 
 ###  MAIN GUI window  ###
-""" 
+"""
 window = Tk()
 window.title("Book tracker")
 window.config(padx=15, pady=15)
@@ -244,8 +251,7 @@ b_list.grid(column=2, row=2, padx=5)
 b_rand.grid(column=3, row=2, padx=5)
 list_box.grid(column=1, row=3, columnspan=3, pady=(10, 10))
 
-window.mainloop()  
-
+window.mainloop()
 """
 
 window =  rootWindow()
