@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox, filedialog, ttk
 from mainFrame import mainContainer
+from sideFrames import addContainer, deleteContainer
 import random, os, json
 
 class rootWindow(tk.Tk):
@@ -11,11 +12,21 @@ class rootWindow(tk.Tk):
         self.config(padx=15, pady=15)
 
         # creating a frame and assigning it to container
-        mainCont = mainContainer(self, height=400, width=500)
-        sideContainer = tk.Frame(self, height=400, width=300)
-        mainCont.grid(column=0, row=0)
-        sideContainer.grid(column=1, row=0)
+        self.mainCont = mainContainer(self, controller=self, width=550, height=420)
 
+        self.sideContainers = {}
+        for f in (addContainer, deleteContainer):
+            frame = f(self, width=200, height=420)
+            self.sideContainers[f] = frame
+            frame.grid(column=1, row=0, pady=15)
+
+        self.mainCont.grid(column=0, row=0)
+        self.show_frames(addContainer)
+
+    def show_frames(self, cont):
+            self.sideContainers[cont].tkraise()
+
+        
         
 
 
