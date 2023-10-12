@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import  messagebox, filedialog, ttk
+from tkinter import  messagebox, filedialog
 import json
 
 def select_to_display():
@@ -16,6 +16,7 @@ def select_to_display():
     return list_content
 
 def cleanEntries(*arg):
+    """delete all text in Entry widget"""
     for i in arg:
         i.delete(0, tk.END)
 
@@ -40,6 +41,7 @@ def standard(str):
     return str
 
 def reload_list(bk, a, book_list):
+    """get new values from a list after a book was deleted"""
     bk['values'] = []
     a.set('')
     with open(book_list, "r") as f:

@@ -1,8 +1,9 @@
 import tkinter as tk
-from tkinter import  messagebox, filedialog, ttk
+from tkinter import ttk
 import random
 from sideFrames import addContainer, deleteContainer
 from helpers import select_to_display
+
 class mainContainer(tk.Frame):
     def __init__(self, root,controller, *args, **kwargs):
         tk.Frame.__init__(self, root, *args, **kwargs)
@@ -58,6 +59,6 @@ class mainContainer(tk.Frame):
         for k in book_list.keys():
             all_books += book_list[k]
         r_bk = random.choice(all_books)
-        athr = [k for k in book_list.keys() if r_bk in list[k]] # I am really pround of this line 
+        athr = [k for k in book_list.keys() if r_bk in book_list[k]] # I am really pround of this line 
         display = f"Book to read:\n\t-- {r_bk} by {athr[0]}"
         self.list_box.insert(1.0, display)

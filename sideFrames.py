@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import  messagebox, filedialog, ttk
+from tkinter import  messagebox, ttk
 from helpers import cleanEntries, save, standard, select, reload_list, del_book
 import os, json
 
@@ -43,7 +43,7 @@ class addContainer(tk.Frame):
             jfile = os.path.join(dir, f"{l}.json")
             with open(jfile, "w") as f:
                 json.dump(data, f, indent=4)
-            messagebox.showinfo(title="Success", message="New list was created")
+            messagebox.showinfo(title="Success", message=f"New list was created:\n{os.path.abspath(l)}")
             cleanEntries(self.book, self.author, self.new_list)
         else:
             messagebox.showerror(title="Error", message="You must fill all the fields")
@@ -70,7 +70,6 @@ class addContainer(tk.Frame):
             cleanEntries(self.author, self.book)
         else:
             messagebox.showerror(title="Error", message="Author and Book title field should NOT be empty")
-
 
 class deleteContainer(tk.Frame):
     def __init__(self, root, *args, **kwargs):
@@ -99,15 +98,17 @@ class deleteContainer(tk.Frame):
         self.author_del .grid(column=1, row=7, pady=5)
 
     def selection_changed(self, event):
+        """to update drop list options"""
         a = self.author.get()
         self.book['values'] = self.jfile[a]
 
     def choose(self):
+        """choose a list from which a user wants to delete books"""
         self.book_list, self.jfile = select()
         reload_list(self.book, self.author, self.book_list)
  
     def delete_book(self):
-        """function to delete a book or an author from a list"""
+        """function to delete a book from a list"""
         athr = self.author.get()
         bk = self.book.get()
         if athr and bk:
