@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import  messagebox, filedialog, ttk
-from helpers import cleanEntries, save, standard, select, reload_list
+from helpers import cleanEntries, save, standard, select, reload_list, del_book
 import os, json
 
 
@@ -92,8 +92,8 @@ class deleteContainer(tk.Frame):
         self.author.grid(column=1, row=4, pady=5)
 
         self.choose_list = ttk.Button(self, text="Choose a list", width=15, command=self.choose)
-        self.book_del = ttk.Button(self, text="Delete a book", width=15)#, command=delete_bk)
-        self.author_del = ttk.Button(self, text="Delete an author", width=15)#, command=delete_author)
+        self.book_del = ttk.Button(self, text="Delete a book", width=15, command=self.delete_book)
+        self.author_del = ttk.Button(self, text="Delete an author", width=15, command=self.delete_author)
         self.choose_list.grid(column=1, row=5, pady=5)
         self.book_del.grid(column=1, row=6, pady=5)
         self.author_del .grid(column=1, row=7, pady=5)
@@ -105,27 +105,26 @@ class deleteContainer(tk.Frame):
     def choose(self):
         self.book_list, self.jfile = select()
         reload_list(self.book, self.author, self.book_list)
-
-## STOP point 
+ 
     def delete_book(self):
         """function to delete a book or an author from a list"""
         athr = self.author.get()
         bk = self.book.get()
         if athr and bk:
-            del_book(bk=bk, athr=athr)
-            reload_list()
+            del_book(bk=bk, athr=athr, jfile=self.jfile, book_list=self.book_list)
+            reload_list(self.book, self.author, self.book_list)
             messagebox.showinfo(title="Success", message="Book was deleted from a list")
         else:
             messagebox.showerror(title="Error", message="Author and book fields should NOT be empty")                           
             
-    def delete_author():
-        #function to delete an author from a list
-        athr = author.get()
+    def delete_author(self):
+        """function to delete an author from a list"""
+        athr = self.author.get()
         if athr:
-            JFILE.pop(athr)
-            with open(LIST, "w") as f:
-                json.dump(JFILE, f, indent=4)
-                reload_list()
+            self.jfile.pop(athr)
+            with open(self.book_list, "w") as f:
+                json.dump(self.jfile, f, indent=4)
+            reload_list(self.book, self.author, self.book_list)
             messagebox.showinfo(title="Success", message="Author was deleted")
         else:
             messagebox.showerror(title="Error", message="Author field should NOT be empty")

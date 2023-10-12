@@ -3,11 +3,6 @@ from tkinter import messagebox, filedialog, ttk
 import random, os, json
 from rootWindow import rootWindow 
 
-###  GLOBAL VARs  ###
-LIST = ""
-DIR = ""
-JFILE = ""
-LIST_TO_DISPLAY = ""
 
 ### notes  ###
 # smt weird with reload list()

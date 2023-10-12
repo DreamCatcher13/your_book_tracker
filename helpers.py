@@ -45,3 +45,14 @@ def reload_list(bk, a, book_list):
     with open(book_list, "r") as f:
         jfile = json.load(f)
     a['values'] = [k for k in jfile.keys()]
+
+def del_book(bk, athr, jfile, book_list):
+    """search and delete a book"""
+    books = jfile[athr]
+    books.remove(bk)
+    if len(books) == 0:
+        jfile.pop(athr)
+    else:
+        jfile[athr] = books
+    with open(book_list, "w") as f:
+        json.dump(jfile, f, indent=4)
